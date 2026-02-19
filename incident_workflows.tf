@@ -68,37 +68,6 @@ resource "pagerduty_incident_workflow" "critical_response" {
       value = "You are being added to a critical incident. Please join the response immediately."
     }
   }
-
-  # Step 3: Create incident tasks
-  step {
-    name   = "Create Initial Response Tasks"
-    action = "pagerduty.com:incident-workflows:create-incident-task:1"
-
-    input {
-      name  = "TaskName"
-      value = "Assess impact and affected systems"
-    }
-  }
-
-  step {
-    name   = "Create Communication Task"
-    action = "pagerduty.com:incident-workflows:create-incident-task:1"
-
-    input {
-      name  = "TaskName"
-      value = "Notify stakeholders and update status page"
-    }
-  }
-
-  step {
-    name   = "Create Investigation Task"
-    action = "pagerduty.com:incident-workflows:create-incident-task:1"
-
-    input {
-      name  = "TaskName"
-      value = "Identify root cause and implement mitigation"
-    }
-  }
 }
 
 # Trigger: Automatically run for critical/P1 incidents
@@ -162,31 +131,9 @@ resource "pagerduty_incident_workflow" "post_incident" {
   count = var.enable_incident_workflows ? 1 : 0
 
   name        = "${var.environment} - Post-Incident Review"
-  description = "Create post-incident review tasks when incident is resolved"
+  description = "Send resolution update when incident is resolved"
 
-  # Step 1: Create postmortem task
-  step {
-    name   = "Create Postmortem Task"
-    action = "pagerduty.com:incident-workflows:create-incident-task:1"
-
-    input {
-      name  = "TaskName"
-      value = "Schedule and conduct post-incident review within 48 hours"
-    }
-  }
-
-  # Step 2: Create documentation task
-  step {
-    name   = "Create Documentation Task"
-    action = "pagerduty.com:incident-workflows:create-incident-task:1"
-
-    input {
-      name  = "TaskName"
-      value = "Document timeline, root cause, and action items"
-    }
-  }
-
-  # Step 3: Send completion status
+  # Send resolution status update
   step {
     name   = "Send Resolution Update"
     action = "pagerduty.com:incident-workflows:send-status-update:1"
@@ -261,38 +208,18 @@ resource "pagerduty_incident_workflow" "database_incident" {
   name        = "${var.environment} - Database Incident Response"
   description = "Specialized response workflow for database incidents"
 
-  # Step 1: Create database-specific tasks
+  # Send database incident status update
   step {
-    name   = "Create DB Health Check Task"
-    action = "pagerduty.com:incident-workflows:create-incident-task:1"
+    name   = "Send Database Incident Update"
+    action = "pagerduty.com:incident-workflows:send-status-update:1"
 
     input {
-      name  = "TaskName"
-      value = "Check database connection pool and active connections"
+      name  = "Message"
+      value = "Database incident detected. DBA team has been notified. Checking connection pools, replication status, and backup availability."
     }
   }
 
-  step {
-    name   = "Create Replication Check Task"
-    action = "pagerduty.com:incident-workflows:create-incident-task:1"
-
-    input {
-      name  = "TaskName"
-      value = "Verify replication lag and replica health"
-    }
-  }
-
-  step {
-    name   = "Create Backup Status Task"
-    action = "pagerduty.com:incident-workflows:create-incident-task:1"
-
-    input {
-      name  = "TaskName"
-      value = "Confirm latest backup availability and recovery point"
-    }
-  }
-
-  # Step 2: Add DBA responders
+  # Add DBA responders
   step {
     name   = "Notify Additional DBA"
     action = "pagerduty.com:incident-workflows:add-responders:1"

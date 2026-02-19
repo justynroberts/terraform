@@ -281,6 +281,61 @@ Service-level orchestration handles:
 - Suppression during maintenance
 - Deduplication
 
+## Incident Workflows
+
+Automated response workflows that execute when incidents occur:
+
+| Workflow | Trigger | Actions |
+|----------|---------|---------|
+| **Critical Response** | Auto: P1/high urgency on Payment, API Gateway, Database | Send status update, add secondary responders |
+| **Customer Communication** | Manual: All services | Send customer-facing status update |
+| **Post-Incident Review** | Manual: All services | Send resolution notification |
+| **Management Escalation** | Manual: All services | Add management responders, send escalation status |
+| **Database Incident** | Auto: High urgency on Database service | Send DB incident status, add DBA responders |
+
+### Supported Workflow Actions
+
+The following actions are reliably supported:
+
+| Action | Description |
+|--------|-------------|
+| `send-status-update` | Post a status update to the incident timeline |
+| `add-responders` | Add users or schedules as responders |
+
+### Trigger Types
+
+- **Manual**: Responders trigger from the incident UI
+- **Conditional**: Auto-triggers when conditions match (e.g., priority, urgency, service)
+
+### Example: Adding a New Workflow
+
+```hcl
+resource "pagerduty_incident_workflow" "my_workflow" {
+  count = var.enable_incident_workflows ? 1 : 0
+
+  name        = "My Custom Workflow"
+  description = "Description of what this workflow does"
+
+  step {
+    name   = "Send Update"
+    action = "pagerduty.com:incident-workflows:send-status-update:1"
+
+    input {
+      name  = "Message"
+      value = "Your status message here"
+    }
+  }
+}
+
+resource "pagerduty_incident_workflow_trigger" "my_workflow_manual" {
+  count = var.enable_incident_workflows ? 1 : 0
+
+  type                       = "manual"
+  workflow                   = pagerduty_incident_workflow.my_workflow[0].id
+  subscribed_to_all_services = true
+}
+```
+
 ## Security Notes
 
 - Never commit `terraform.tfvars` with real values

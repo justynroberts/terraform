@@ -90,25 +90,21 @@ resource "pagerduty_extension" "webhook_database" {
 }
 
 # =============================================================================
-# Multi-Service Webhook Extension
+# Multi-Service Webhook Extension (COMMENTED - one service per extension only)
 # =============================================================================
-# Single webhook receiving notifications from multiple services
-
-resource "pagerduty_extension" "webhook_all_services" {
-  name             = "Central Incident Webhook"
-  extension_schema = data.pagerduty_extension_schema.webhook.id
-
-  # Multiple services send to the same endpoint
-  extension_objects = [
-    pagerduty_service.services["api_gateway"].id,
-    pagerduty_service.services["user_service"].id,
-    pagerduty_service.services["payment_service"].id,
-    pagerduty_service.services["notification_service"].id,
-    pagerduty_service.services["analytics_service"].id,
-  ]
-
-  endpoint_url = "https://hooks.example.com/pagerduty/all-incidents"
-}
+# PagerDuty only allows ONE service per extension_objects array.
+# To send multiple services to the same endpoint, create separate extensions
+# for each service pointing to the same URL.
+#
+# resource "pagerduty_extension" "webhook_all_services" {
+#   name             = "Central Incident Webhook"
+#   extension_schema = data.pagerduty_extension_schema.webhook.id
+#
+#   # LIMITATION: Only ONE service allowed per extension
+#   extension_objects = [pagerduty_service.services["api_gateway"].id]
+#
+#   endpoint_url = "https://hooks.example.com/pagerduty/all-incidents"
+# }
 
 # =============================================================================
 # Automation Trigger Webhook
@@ -128,15 +124,14 @@ resource "pagerduty_extension" "automation_trigger" {
 # Observability Platform Webhook
 # =============================================================================
 # Send incident data to observability platforms for correlation
+# NOTE: Only ONE service per extension - create multiple for more services
 
 resource "pagerduty_extension" "observability_webhook" {
   name             = "Observability Platform Webhook"
   extension_schema = data.pagerduty_extension_schema.webhook.id
 
-  extension_objects = [
-    pagerduty_service.services["api_gateway"].id,
-    pagerduty_service.database_primary.id,
-  ]
+  # Only ONE service allowed per extension
+  extension_objects = [pagerduty_service.services["api_gateway"].id]
 
   # Endpoint for your observability platform
   # Examples: Datadog, New Relic, Splunk, Grafana
@@ -147,16 +142,14 @@ resource "pagerduty_extension" "observability_webhook" {
 # Status Page Webhook
 # =============================================================================
 # Update external status page when incidents occur
+# NOTE: Only ONE service per extension - create multiple for more services
 
 resource "pagerduty_extension" "status_page_webhook" {
   name             = "Status Page Update Webhook"
   extension_schema = data.pagerduty_extension_schema.webhook.id
 
-  # Customer-facing services that affect status page
-  extension_objects = [
-    pagerduty_service.services["api_gateway"].id,
-    pagerduty_service.services["payment_service"].id,
-  ]
+  # Only ONE service allowed per extension
+  extension_objects = [pagerduty_service.services["api_gateway"].id]
 
   # Endpoint for your status page provider
   # Examples: Statuspage.io, Cachet, Atlassian Statuspage
@@ -169,20 +162,22 @@ resource "pagerduty_extension" "status_page_webhook" {
 # Create extensions from a variable map for flexibility
 
 variable "webhook_extensions" {
-  description = "Map of webhook extensions to create"
+  description = "Map of webhook extensions to create (NOTE: only first service_key used - one service per extension)"
   type = map(object({
     name         = string
     endpoint_url = string
-    service_keys = list(string)
+    service_keys = list(string) # Only first element used - PagerDuty limitation
   }))
   default = {}
 
   # Example usage in terraform.tfvars:
+  # NOTE: PagerDuty only allows ONE service per extension.
+  # Create separate extensions for each service if needed.
   # webhook_extensions = {
-  #   slack_backup = {
-  #     name         = "Backup Slack Webhook"
+  #   api_gateway_slack = {
+  #     name         = "API Gateway Slack Webhook"
   #     endpoint_url = "https://hooks.slack.com/services/xxx"
-  #     service_keys = ["api_gateway", "payment_service"]
+  #     service_keys = ["api_gateway"]  # Only first element used
   #   }
   # }
 }
@@ -193,9 +188,9 @@ resource "pagerduty_extension" "dynamic" {
   name             = each.value.name
   extension_schema = data.pagerduty_extension_schema.webhook.id
 
+  # NOTE: Only ONE service per extension - uses first service_key only
   extension_objects = [
-    for key in each.value.service_keys :
-    lookup(local.all_service_ids, key, pagerduty_service.services[key].id)
+    lookup(local.all_service_ids, each.value.service_keys[0], pagerduty_service.services[each.value.service_keys[0]].id)
   ]
 
   endpoint_url = each.value.endpoint_url
@@ -210,7 +205,6 @@ locals {
     webhook_api_gateway   = pagerduty_extension.webhook_api_gateway.id
     webhook_payment       = pagerduty_extension.webhook_payment.id
     webhook_database      = pagerduty_extension.webhook_database.id
-    webhook_all_services  = pagerduty_extension.webhook_all_services.id
     automation_trigger    = pagerduty_extension.automation_trigger.id
     observability_webhook = pagerduty_extension.observability_webhook.id
     status_page_webhook   = pagerduty_extension.status_page_webhook.id
