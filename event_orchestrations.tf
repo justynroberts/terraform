@@ -341,8 +341,8 @@ resource "pagerduty_event_orchestration_unrouted" "main" {
 
         # Extract relevant fields for debugging
         extraction {
-          target = "event.custom_details.original_source"
-          source = "event.source"
+          target   = "event.custom_details.original_source"
+          template = "{{event.source}}"
         }
       }
     }

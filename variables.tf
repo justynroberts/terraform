@@ -115,6 +115,10 @@ variable "teams" {
       name        = "Site Reliability Engineering"
       description = "SRE team responsible for production reliability"
     }
+    leadership = {
+      name        = "Engineering Leadership"
+      description = "Engineering managers and directors"
+    }
   }
 }
 
