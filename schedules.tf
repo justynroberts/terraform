@@ -85,7 +85,7 @@ resource "pagerduty_schedule" "secondary" {
 resource "pagerduty_schedule" "follow_the_sun" {
   name        = "${var.environment} - Follow-the-Sun"
   description = "24/7 global coverage with regional handoffs"
-  time_zone   = "UTC" # Use UTC as base for follow-the-sun
+  time_zone   = "Etc/UTC" # Use UTC as base for follow-the-sun
 
   teams = [pagerduty_team.teams["platform"].id]
 

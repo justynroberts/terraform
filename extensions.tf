@@ -37,9 +37,11 @@ data "pagerduty_extension_schema" "webhook" {
   name = "Generic V2 Webhook"
 }
 
-data "pagerduty_extension_schema" "slack" {
-  name = "Slack"
-}
+# Slack extension schema (requires Slack app installed in PagerDuty)
+# Uncomment if you have Slack integration enabled
+# data "pagerduty_extension_schema" "slack" {
+#   name = "Slack"
+# }
 
 # ServiceNow extension schema (requires ServiceNow integration)
 # data "pagerduty_extension_schema" "servicenow" {

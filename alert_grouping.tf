@@ -57,7 +57,7 @@ resource "pagerduty_alert_grouping_setting" "api_gateway_intelligent" {
 
 resource "pagerduty_alert_grouping_setting" "database_time_based" {
   name        = "Database Time-Based Grouping"
-  description = "Group database alerts within a 10-minute window"
+  description = "Group database alerts within a time window"
   type        = "time"
 
   services = [
@@ -65,9 +65,8 @@ resource "pagerduty_alert_grouping_setting" "database_time_based" {
   ]
 
   config {
-    # 10-minute grouping window
-    time_window = 600
-    aggregate   = "all"
+    # Time-based grouping uses timeout setting (in minutes)
+    timeout = 10
   }
 }
 

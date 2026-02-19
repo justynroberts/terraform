@@ -67,13 +67,13 @@ variable "enable_slack_connections" {
 # Connect all SRE team incidents to the main incidents channel
 
 resource "pagerduty_slack_connection" "sre_team" {
-  count = var.enable_slack_connections && var.slack_workspace_id != "" ? 1 : 0
+  count = var.enable_slack_connections && var.slack_workspace_id != "" && contains(keys(var.slack_channels), "incidents") ? 1 : 0
 
   source_id   = pagerduty_team.teams["sre"].id
   source_type = "team_reference"
 
   workspace_id = var.slack_workspace_id
-  channel_id   = lookup(var.slack_channels, "incidents", { channel_id = "" }).channel_id
+  channel_id   = var.slack_channels["incidents"].channel_id
 
   notification_type = "responder"
 

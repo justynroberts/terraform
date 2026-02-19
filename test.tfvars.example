@@ -1,0 +1,166 @@
+# =============================================================================
+# Test Configuration
+# =============================================================================
+# This includes all required users/teams/services needed by the configuration.
+# The example resources reference these by key name.
+#
+# Usage:
+#   export PAGERDUTY_TOKEN="your-token"
+#   terraform init
+#   terraform plan -var-file=test.tfvars
+#   terraform apply -var-file=test.tfvars
+#
+# Clean up:
+#   terraform destroy -var-file=test.tfvars
+# =============================================================================
+
+environment      = "test"
+default_timezone = "America/New_York"
+
+# -----------------------------------------------------------------------------
+# Users - UPDATE EMAILS TO VALID ADDRESSES IN YOUR PAGERDUTY ACCOUNT
+# -----------------------------------------------------------------------------
+# Note: All email addresses must be unique and valid for your PagerDuty account.
+# You can use your own email with +suffix for testing (e.g., you+alice@example.com)
+
+users = {
+  alice = {
+    name      = "Alice Engineer"
+    email     = "YOUR_EMAIL+alice@example.com"  # <-- CHANGE THIS
+    role      = "user"
+    job_title = "Senior SRE"
+    time_zone = "America/New_York"
+  }
+  bob = {
+    name      = "Bob Developer"
+    email     = "YOUR_EMAIL+bob@example.com"    # <-- CHANGE THIS
+    role      = "user"
+    job_title = "Staff Engineer"
+    time_zone = "America/Los_Angeles"
+  }
+  carol = {
+    name      = "Carol Operations"
+    email     = "YOUR_EMAIL+carol@example.com"  # <-- CHANGE THIS
+    role      = "user"
+    job_title = "DevOps Engineer"
+    time_zone = "Europe/London"
+  }
+  david = {
+    name      = "David Platform"
+    email     = "YOUR_EMAIL+david@example.com"  # <-- CHANGE THIS
+    role      = "user"
+    job_title = "Platform Engineer"
+    time_zone = "Asia/Tokyo"
+  }
+  emma = {
+    name      = "Emma Manager"
+    email     = "YOUR_EMAIL+emma@example.com"   # <-- CHANGE THIS
+    role      = "admin"
+    job_title = "Engineering Manager"
+    time_zone = "America/New_York"
+  }
+}
+
+# -----------------------------------------------------------------------------
+# Teams
+# -----------------------------------------------------------------------------
+teams = {
+  sre = {
+    name        = "SRE Team"
+    description = "Site Reliability Engineering"
+  }
+  backend = {
+    name        = "Backend Team"
+    description = "Backend Development"
+  }
+  platform = {
+    name        = "Platform Team"
+    description = "Platform Engineering"
+  }
+  leadership = {
+    name        = "Leadership Team"
+    description = "Engineering Leadership"
+  }
+}
+
+# -----------------------------------------------------------------------------
+# Team Memberships
+# -----------------------------------------------------------------------------
+team_memberships = {
+  alice_sre = {
+    user = "alice"
+    team = "sre"
+    role = "manager"
+  }
+  bob_sre = {
+    user = "bob"
+    team = "sre"
+    role = "responder"
+  }
+  carol_backend = {
+    user = "carol"
+    team = "backend"
+    role = "responder"
+  }
+  david_platform = {
+    user = "david"
+    team = "platform"
+    role = "responder"
+  }
+  emma_sre = {
+    user = "emma"
+    team = "leadership"
+    role = "manager"
+  }
+}
+
+# -----------------------------------------------------------------------------
+# Services
+# -----------------------------------------------------------------------------
+services = {
+  api_gateway = {
+    name                  = "API Gateway"
+    description           = "Main API gateway service"
+    escalation_policy_key = "primary"
+    urgency               = "high"
+  }
+  user_service = {
+    name                  = "User Service"
+    description           = "User management service"
+    escalation_policy_key = "primary"
+    urgency               = "high"
+  }
+  payment_service = {
+    name                  = "Payment Service"
+    description           = "Payment processing service"
+    escalation_policy_key = "critical"
+    urgency               = "high"
+  }
+  notification_service = {
+    name                  = "Notification Service"
+    description           = "Email and push notifications"
+    escalation_policy_key = "primary"
+    urgency               = "low"
+  }
+  analytics_service = {
+    name                  = "Analytics Service"
+    description           = "Analytics and reporting"
+    escalation_policy_key = "secondary"
+    urgency               = "low"
+  }
+}
+
+# -----------------------------------------------------------------------------
+# Disable Optional Features (enable after basic config works)
+# -----------------------------------------------------------------------------
+enable_event_orchestration   = false
+enable_incident_workflows    = false
+enable_automation_actions    = false
+enable_slack_connections     = false
+enable_webhook_subscriptions = false
+
+# -----------------------------------------------------------------------------
+# Timeouts
+# -----------------------------------------------------------------------------
+escalation_delay_minutes = 5
+escalation_num_loops     = 1

@@ -38,23 +38,11 @@ resource "pagerduty_response_play" "major_incident" {
   responder {
     type = "schedule_reference"
     id   = pagerduty_schedule.primary.id
-
-    name                = "Primary On-Call"
-    description         = "Primary on-call responder"
-    escalation_rules    = []
-    num_loops           = 0
-    on_call_handoff_notifications = "if_has_services"
   }
 
   responder {
     type = "schedule_reference"
     id   = pagerduty_schedule.secondary.id
-
-    name                = "Secondary On-Call"
-    description         = "Secondary/backup responder"
-    escalation_rules    = []
-    num_loops           = 0
-    on_call_handoff_notifications = "if_has_services"
   }
 
   # Add subscribers who will receive status updates
@@ -85,9 +73,6 @@ resource "pagerduty_response_play" "customer_escalation" {
   responder {
     type = "user_reference"
     id   = pagerduty_user.users["emma"].id
-
-    name        = "Engineering Manager"
-    description = "Coordinate technical response"
   }
 
   # Add subscribers for status updates
@@ -113,17 +98,11 @@ resource "pagerduty_response_play" "database_emergency" {
   responder {
     type = "user_reference"
     id   = pagerduty_user.users["alice"].id
-
-    name        = "Senior DBA"
-    description = "Database administration lead"
   }
 
   responder {
     type = "user_reference"
     id   = pagerduty_user.users["bob"].id
-
-    name        = "Platform Engineer"
-    description = "Infrastructure support"
   }
 
   # Management notification
@@ -150,9 +129,6 @@ resource "pagerduty_response_play" "security_incident" {
   responder {
     type = "team_reference"
     id   = pagerduty_team.teams["sre"].id
-
-    name        = "SRE Team"
-    description = "Site Reliability Engineering for containment"
   }
 
   # Notify leadership

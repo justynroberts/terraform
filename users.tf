@@ -74,33 +74,32 @@ resource "pagerduty_user" "users" {
 #   - Delayed notification for low-urgency incidents
 #   - Escalating notification (email first, then SMS, then phone)
 
-# Example: Create notification rules for immediate alerts via default email
-resource "pagerduty_user_notification_rule" "immediate_email" {
-  for_each = var.users
+# Note: Notification rules are created automatically by PagerDuty when users are created.
+# Custom notification rules can be managed via the API or UI.
+# The pagerduty_user_notification_rule resource requires looking up the contact_method ID
+# which is created automatically - see data sources below for how to reference them.
 
-  user_id                = pagerduty_user.users[each.key].id
-  start_delay_in_minutes = 0
-  urgency                = "high"
+# Example: Look up a user's default email contact method
+# data "pagerduty_user_contact_method" "email" {
+#   for_each = var.users
+#   user_id  = pagerduty_user.users[each.key].id
+#   type     = "email_contact_method"
+#   label    = "Default"
+# }
 
-  contact_method = {
-    type = "email_contact_method"
-    id   = pagerduty_user.users[each.key].id
-  }
-}
-
-# Example: Create delayed notification for low-urgency incidents
-resource "pagerduty_user_notification_rule" "delayed_low_urgency" {
-  for_each = var.users
-
-  user_id                = pagerduty_user.users[each.key].id
-  start_delay_in_minutes = 30 # Wait 30 minutes before notifying
-  urgency                = "low"
-
-  contact_method = {
-    type = "email_contact_method"
-    id   = pagerduty_user.users[each.key].id
-  }
-}
+# Example: Create custom notification rule (requires contact_method data source)
+# resource "pagerduty_user_notification_rule" "immediate_email" {
+#   for_each = var.users
+#
+#   user_id                = pagerduty_user.users[each.key].id
+#   start_delay_in_minutes = 0
+#   urgency                = "high"
+#
+#   contact_method {
+#     type = "email_contact_method"
+#     id   = data.pagerduty_user_contact_method.email[each.key].id
+#   }
+# }
 
 # =============================================================================
 # Locals for User References

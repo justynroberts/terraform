@@ -338,12 +338,11 @@ resource "pagerduty_event_orchestration_unrouted" "main" {
 
       actions {
         severity = "critical"
-        annotate = "UNROUTED EVENT: This critical event did not match any routing rules. Please review orchestration configuration."
 
         # Extract relevant fields for debugging
         extraction {
-          target   = "event.custom_details.original_source"
-          source   = "event.source"
+          target = "event.custom_details.original_source"
+          source = "event.source"
         }
       }
     }
@@ -355,7 +354,8 @@ resource "pagerduty_event_orchestration_unrouted" "main" {
       # No conditions - matches everything not caught above
       actions {
         severity = "info"
-        annotate = "Unrouted event - review routing rules if this event should have been routed to a service."
+        # Note: annotate is not supported in unrouted orchestration
+        # Use extraction to add context instead
       }
     }
   }
