@@ -151,13 +151,13 @@ services = {
 }
 
 # -----------------------------------------------------------------------------
-# Disable Optional Features (enable after basic config works)
+# Feature Toggles
 # -----------------------------------------------------------------------------
-enable_event_orchestration   = false
-enable_incident_workflows    = false
-enable_automation_actions    = false
-enable_slack_connections     = false
-enable_webhook_subscriptions = false
+enable_event_orchestration   = false  # Enable if your plan supports it
+enable_incident_workflows    = true   # Automated incident response
+enable_automation_actions    = false  # Requires Process Automation license
+enable_slack_connections     = false  # Requires Slack integration setup
+enable_webhook_subscriptions = false  # V3 webhooks
 
 # -----------------------------------------------------------------------------
 # Timeouts

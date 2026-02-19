@@ -224,9 +224,9 @@ variable "orchestration_name" {
 # =============================================================================
 
 variable "enable_incident_workflows" {
-  description = "Whether to create incident workflow resources (requires specific license)"
+  description = "Whether to create incident workflow resources"
   type        = bool
-  default     = false # Disabled by default - requires Incident Workflows license
+  default     = true
 }
 
 # =============================================================================

@@ -153,7 +153,6 @@ escalation_policy = local.escalation_policy_ids[each.value.escalation_policy_key
 | `pagerduty_tag_assignment` | Assign tags to resources |
 | `pagerduty_maintenance_window` | Scheduled maintenance periods |
 | `pagerduty_extension` | Webhook extensions |
-| `pagerduty_response_play` | One-click incident response (legacy) |
 | `pagerduty_slack_connection` | Native Slack integration |
 | `pagerduty_webhook_subscription` | V3 webhook subscriptions |
 | `pagerduty_addon` | UI add-ons |
