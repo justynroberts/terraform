@@ -46,6 +46,17 @@ terraform output service_integration_keys  # Get integration keys
 | `schedules.tf` | On-call schedules (weekly, follow-the-sun, business hours) |
 | `escalation_policies.tf` | Escalation chains (primary, critical, management) |
 | `services.tf` | Technical services, integrations, business services, dependencies |
+| `priorities.tf` | P1-P5 incident priority data sources |
+| `tags.tf` | Tags and tag assignments for organization |
+| `maintenance_windows.tf` | Scheduled maintenance windows |
+| `extensions.tf` | Webhook extensions for external systems |
+| `response_plays.tf` | One-click incident response actions (legacy) |
+| `slack_connections.tf` | Native Slack V2 integration |
+| `webhook_subscriptions.tf` | V3 webhook subscriptions |
+| `addons.tf` | UI add-ons (dashboards, runbooks) |
+| `rulesets.tf` | Legacy event rules and rulesets |
+| `incident_custom_fields.tf` | Custom fields for incident categorization |
+| `alert_grouping.tf` | Intelligent alert grouping settings |
 | `event_orchestrations.tf` | Event routing, transformation, suppression rules |
 | `incident_workflows.tf` | Automated response workflows and triggers |
 | `automation_actions.tf` | Runbook automation runners and diagnostic/remediation scripts |
@@ -105,9 +116,11 @@ users = {
 Optional features can be enabled/disabled:
 
 ```hcl
-enable_event_orchestration = true   # Requires appropriate license
-enable_incident_workflows  = true   # Requires appropriate license
-enable_automation_actions  = false  # Requires Automation Actions license
+enable_event_orchestration   = true   # Requires appropriate license
+enable_incident_workflows    = true   # Requires appropriate license
+enable_automation_actions    = false  # Requires Automation Actions license
+enable_slack_connections     = false  # Requires Slack integration setup
+enable_webhook_subscriptions = true   # V3 webhooks
 ```
 
 ### Resource References
@@ -137,6 +150,18 @@ escalation_policy = local.escalation_policy_ids[each.value.escalation_policy_key
 | `pagerduty_service_integration` | Events API, email, vendor integrations |
 | `pagerduty_business_service` | Business-level services for impact analysis |
 | `pagerduty_service_dependency` | Service relationship mapping |
+| `pagerduty_tag` | Tags for resource organization |
+| `pagerduty_tag_assignment` | Assign tags to resources |
+| `pagerduty_maintenance_window` | Scheduled maintenance periods |
+| `pagerduty_extension` | Webhook extensions |
+| `pagerduty_response_play` | One-click incident response (legacy) |
+| `pagerduty_slack_connection` | Native Slack integration |
+| `pagerduty_webhook_subscription` | V3 webhook subscriptions |
+| `pagerduty_addon` | UI add-ons |
+| `pagerduty_ruleset` | Event rulesets (legacy) |
+| `pagerduty_ruleset_rule` | Rules within rulesets |
+| `pagerduty_incident_custom_field` | Custom incident fields |
+| `pagerduty_alert_grouping_setting` | Alert grouping configuration |
 | `pagerduty_event_orchestration` | Global event routing |
 | `pagerduty_event_orchestration_router` | Route events to services |
 | `pagerduty_event_orchestration_service` | Per-service event processing |
