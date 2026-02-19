@@ -28,6 +28,8 @@
 # Processes all incoming events before service routing
 
 resource "pagerduty_ruleset" "global" {
+  count = var.enable_rulesets ? 1 : 0
+
   name = "${var.environment} - Global Event Rules"
 
   team {
@@ -41,7 +43,8 @@ resource "pagerduty_ruleset" "global" {
 
 # Rule 1: Route critical payment alerts with high priority
 resource "pagerduty_ruleset_rule" "payment_critical" {
-  ruleset  = pagerduty_ruleset.global.id
+  ruleset  = pagerduty_ruleset.global[0].id
+  count    = var.enable_rulesets ? 1 : 0
   position = 0
 
   conditions {
@@ -85,7 +88,8 @@ resource "pagerduty_ruleset_rule" "payment_critical" {
 
 # Rule 2: Route database alerts
 resource "pagerduty_ruleset_rule" "database_alerts" {
-  ruleset  = pagerduty_ruleset.global.id
+  ruleset  = pagerduty_ruleset.global[0].id
+  count    = var.enable_rulesets ? 1 : 0
   position = 1
 
   conditions {
@@ -129,7 +133,8 @@ resource "pagerduty_ruleset_rule" "database_alerts" {
 
 # Rule 3: Suppress test/development alerts
 resource "pagerduty_ruleset_rule" "suppress_test" {
-  ruleset  = pagerduty_ruleset.global.id
+  ruleset  = pagerduty_ruleset.global[0].id
+  count    = var.enable_rulesets ? 1 : 0
   position = 2
 
   conditions {
@@ -169,7 +174,8 @@ resource "pagerduty_ruleset_rule" "suppress_test" {
 
 # Rule 4: Route API gateway alerts
 resource "pagerduty_ruleset_rule" "api_gateway" {
-  ruleset  = pagerduty_ruleset.global.id
+  ruleset  = pagerduty_ruleset.global[0].id
+  count    = var.enable_rulesets ? 1 : 0
   position = 3
 
   conditions {
@@ -209,7 +215,8 @@ resource "pagerduty_ruleset_rule" "api_gateway" {
 
 # Rule 5: Set low priority for warning-level alerts
 resource "pagerduty_ruleset_rule" "warning_low_priority" {
-  ruleset  = pagerduty_ruleset.global.id
+  ruleset  = pagerduty_ruleset.global[0].id
+  count    = var.enable_rulesets ? 1 : 0
   position = 4
 
   conditions {
@@ -237,7 +244,8 @@ resource "pagerduty_ruleset_rule" "warning_low_priority" {
 
 # Rule 6: Catch-all rule - route to default service
 resource "pagerduty_ruleset_rule" "catch_all" {
-  ruleset  = pagerduty_ruleset.global.id
+  ruleset  = pagerduty_ruleset.global[0].id
+  count    = var.enable_rulesets ? 1 : 0
   position = 99
 
   # No conditions - matches everything not caught above
@@ -310,18 +318,18 @@ resource "pagerduty_service_event_rule" "api_suppress_4xx" {
 # =============================================================================
 
 locals {
-  ruleset_ids = {
-    global = pagerduty_ruleset.global.id
-  }
+  ruleset_ids = var.enable_rulesets ? {
+    global = pagerduty_ruleset.global[0].id
+  } : {}
 
-  ruleset_rule_ids = {
-    payment_critical     = pagerduty_ruleset_rule.payment_critical.id
-    database_alerts      = pagerduty_ruleset_rule.database_alerts.id
-    suppress_test        = pagerduty_ruleset_rule.suppress_test.id
-    api_gateway          = pagerduty_ruleset_rule.api_gateway.id
-    warning_low_priority = pagerduty_ruleset_rule.warning_low_priority.id
-    catch_all            = pagerduty_ruleset_rule.catch_all.id
-  }
+  ruleset_rule_ids = var.enable_rulesets ? {
+    payment_critical     = pagerduty_ruleset_rule.payment_critical[0].id
+    database_alerts      = pagerduty_ruleset_rule.database_alerts[0].id
+    suppress_test        = pagerduty_ruleset_rule.suppress_test[0].id
+    api_gateway          = pagerduty_ruleset_rule.api_gateway[0].id
+    warning_low_priority = pagerduty_ruleset_rule.warning_low_priority[0].id
+    catch_all            = pagerduty_ruleset_rule.catch_all[0].id
+  } : {}
 }
 
 # =============================================================================

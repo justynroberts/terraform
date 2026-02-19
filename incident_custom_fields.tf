@@ -28,12 +28,12 @@
 # Categorize incidents by type for better reporting
 
 resource "pagerduty_incident_custom_field" "incident_type" {
-  name         = "incident_type"
-  display_name = "Incident Type"
-  description  = "The category/type of this incident"
-  data_type    = "string"
-  field_type   = "single_value"
-}
+  name          = "incident_type"
+  display_name  = "Incident Type"
+  description   = "The category/type of this incident"
+  data_type     = "string"
+  field_type    = "single_value_fixed"
+  }
 
 resource "pagerduty_incident_custom_field_option" "incident_type_infrastructure" {
   field    = pagerduty_incident_custom_field.incident_type.id
@@ -77,12 +77,12 @@ resource "pagerduty_incident_custom_field_option" "incident_type_third_party" {
 # Track which regions are impacted
 
 resource "pagerduty_incident_custom_field" "affected_region" {
-  name         = "affected_region"
-  display_name = "Affected Region(s)"
-  description  = "Geographic regions impacted by this incident"
-  data_type    = "string"
-  field_type   = "multi_value" # Allow multiple selections
-}
+  name          = "affected_region"
+  display_name  = "Affected Region(s)"
+  description   = "Geographic regions impacted by this incident"
+  data_type     = "string"
+  field_type    = "multi_value_fixed"
+  }
 
 resource "pagerduty_incident_custom_field_option" "region_us_east" {
   field    = pagerduty_incident_custom_field.affected_region.id
@@ -120,12 +120,12 @@ resource "pagerduty_incident_custom_field_option" "region_global" {
 # Quantify customer impact for prioritization
 
 resource "pagerduty_incident_custom_field" "customer_impact" {
-  name         = "customer_impact"
-  display_name = "Customer Impact"
-  description  = "Level of customer impact"
-  data_type    = "string"
-  field_type   = "single_value"
-}
+  name          = "customer_impact"
+  display_name  = "Customer Impact"
+  description   = "Level of customer impact"
+  data_type     = "string"
+  field_type    = "single_value_fixed"
+  }
 
 resource "pagerduty_incident_custom_field_option" "impact_none" {
   field    = pagerduty_incident_custom_field.customer_impact.id
@@ -163,12 +163,12 @@ resource "pagerduty_incident_custom_field_option" "impact_critical" {
 # Track root cause categories for trending analysis
 
 resource "pagerduty_incident_custom_field" "root_cause_category" {
-  name         = "root_cause_category"
-  display_name = "Root Cause Category"
-  description  = "Category of the root cause (set during post-incident)"
-  data_type    = "string"
-  field_type   = "single_value"
-}
+  name          = "root_cause_category"
+  display_name  = "Root Cause Category"
+  description   = "Category of the root cause (set during post-incident)"
+  data_type     = "string"
+  field_type    = "single_value_fixed"
+  }
 
 resource "pagerduty_incident_custom_field_option" "cause_code_change" {
   field    = pagerduty_incident_custom_field.root_cause_category.id

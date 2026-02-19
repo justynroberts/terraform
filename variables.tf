@@ -208,9 +208,9 @@ variable "escalation_num_loops" {
 # =============================================================================
 
 variable "enable_event_orchestration" {
-  description = "Whether to create event orchestration resources"
+  description = "Whether to create event orchestration resources (requires appropriate license)"
   type        = bool
-  default     = true
+  default     = false # Disabled by default - enable if your plan supports it
 }
 
 variable "orchestration_name" {
@@ -224,9 +224,19 @@ variable "orchestration_name" {
 # =============================================================================
 
 variable "enable_incident_workflows" {
-  description = "Whether to create incident workflow resources"
+  description = "Whether to create incident workflow resources (requires specific license)"
   type        = bool
-  default     = true
+  default     = false # Disabled by default - requires Incident Workflows license
+}
+
+# =============================================================================
+# Rulesets Configuration (Legacy)
+# =============================================================================
+
+variable "enable_rulesets" {
+  description = "Whether to create ruleset resources (legacy - use Event Orchestration instead)"
+  type        = bool
+  default     = false # Disabled by default - Event Orchestration is preferred
 }
 
 # =============================================================================
