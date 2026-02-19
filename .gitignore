@@ -1,0 +1,47 @@
+# Terraform State Files
+# These contain sensitive information and should never be committed
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# Terraform Directory
+# Contains provider binaries and modules
+.terraform/
+
+# Terraform Variable Files
+# May contain sensitive values like API tokens
+*.tfvars
+!*.tfvars.example
+
+# Terraform Crash Logs
+crash.log
+crash.*.log
+
+# Terraform Plan Files
+# Binary files that may contain sensitive data
+*.tfplan
+plan.out
+
+# Override Files
+# Used for local overrides, should not be committed
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI Configuration
+.terraformrc
+terraform.rc
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment Files
+.env
+.env.*
+!.env.example

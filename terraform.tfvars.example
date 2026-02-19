@@ -1,0 +1,158 @@
+# =============================================================================
+# PagerDuty Terraform Configuration - Example Values
+# =============================================================================
+# Copy this file to terraform.tfvars and customize for your environment.
+#
+# IMPORTANT: Never commit terraform.tfvars to version control if it contains
+# sensitive values like API tokens. Use environment variables instead.
+#
+# For sensitive variables, prefer environment variables:
+#   export TF_VAR_pagerduty_token="your-api-token"
+#   export TF_VAR_runbook_api_key="your-runbook-key"
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Environment Settings
+# -----------------------------------------------------------------------------
+environment      = "production"
+default_timezone = "America/New_York"
+
+# -----------------------------------------------------------------------------
+# User Configuration
+# -----------------------------------------------------------------------------
+# Customize the default users or add your own team members
+users = {
+  alice = {
+    name      = "Alice Chen"
+    email     = "alice.chen@yourcompany.com"
+    role      = "user"
+    job_title = "Senior SRE"
+    time_zone = "America/New_York"
+  }
+  bob = {
+    name      = "Bob Smith"
+    email     = "bob.smith@yourcompany.com"
+    role      = "user"
+    job_title = "Platform Engineer"
+    time_zone = "America/Los_Angeles"
+  }
+  carol = {
+    name      = "Carol Williams"
+    email     = "carol.williams@yourcompany.com"
+    role      = "user"
+    job_title = "DevOps Engineer"
+    time_zone = "Europe/London"
+  }
+  david = {
+    name      = "David Kumar"
+    email     = "david.kumar@yourcompany.com"
+    role      = "user"
+    job_title = "Software Engineer"
+    time_zone = "Asia/Tokyo"
+  }
+  emma = {
+    name      = "Emma Garcia"
+    email     = "emma.garcia@yourcompany.com"
+    role      = "admin"
+    job_title = "Engineering Manager"
+    time_zone = "America/Chicago"
+  }
+}
+
+# -----------------------------------------------------------------------------
+# Team Configuration
+# -----------------------------------------------------------------------------
+teams = {
+  platform = {
+    name        = "Platform Engineering"
+    description = "Infrastructure and platform services team"
+  }
+  backend = {
+    name        = "Backend Services"
+    description = "API and backend service development team"
+  }
+  sre = {
+    name        = "Site Reliability Engineering"
+    description = "SRE team responsible for production reliability"
+  }
+}
+
+# -----------------------------------------------------------------------------
+# Service Configuration
+# -----------------------------------------------------------------------------
+services = {
+  api_gateway = {
+    name                  = "API Gateway"
+    description           = "Main API gateway handling all external traffic"
+    escalation_policy_key = "primary"
+    urgency               = "high"
+  }
+  user_service = {
+    name                  = "User Service"
+    description           = "User authentication and profile management"
+    escalation_policy_key = "primary"
+    urgency               = "high"
+  }
+  payment_service = {
+    name                    = "Payment Service"
+    description             = "Payment processing and billing"
+    escalation_policy_key   = "critical"
+    urgency                 = "high"
+    auto_resolve_timeout    = null  # Never auto-resolve payment alerts
+    acknowledgement_timeout = 600   # 10 minutes
+  }
+  notification_service = {
+    name                  = "Notification Service"
+    description           = "Email, SMS, and push notification delivery"
+    escalation_policy_key = "secondary"
+    urgency               = "low"
+  }
+  analytics_service = {
+    name                  = "Analytics Service"
+    description           = "Data analytics and reporting"
+    escalation_policy_key = "secondary"
+    urgency               = "low"
+  }
+}
+
+# -----------------------------------------------------------------------------
+# Schedule Configuration
+# -----------------------------------------------------------------------------
+schedule_rotation_length_days = 7    # Weekly rotation
+schedule_start_time           = "2024-01-01T09:00:00-05:00"
+
+# -----------------------------------------------------------------------------
+# Escalation Policy Configuration
+# -----------------------------------------------------------------------------
+escalation_delay_minutes = 10  # Minutes before escalating to next level
+escalation_num_loops     = 2   # Times to loop through policy before giving up
+
+# -----------------------------------------------------------------------------
+# Feature Toggles
+# -----------------------------------------------------------------------------
+# Enable/disable optional features based on your PagerDuty license
+
+# Event Orchestration (requires appropriate license tier)
+enable_event_orchestration = true
+orchestration_name         = "Production Event Orchestration"
+
+# Incident Workflows (requires appropriate license tier)
+enable_incident_workflows = true
+
+# Automation Actions (requires Automation Actions license)
+# Set to true and provide runbook credentials if you have the license
+enable_automation_actions = false
+
+# Uncomment and set these if using Automation Actions:
+# runbook_base_uri = "your-org.runbook.pagerduty.com"
+# runbook_api_key  = "your-runbook-api-key"  # Better to use env var
+
+# -----------------------------------------------------------------------------
+# Tags
+# -----------------------------------------------------------------------------
+tags = {
+  managed_by  = "terraform"
+  environment = "production"
+  team        = "platform"
+  repository  = "pagerduty-terraform"
+}
