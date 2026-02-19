@@ -69,30 +69,29 @@ resource "pagerduty_service_integration" "events_api_v2" {
 }
 
 # =============================================================================
-# Service Integrations - Email Integration
+# Service Integrations - Email Integration (Optional)
 # =============================================================================
 # Email integrations allow services to receive alerts via email.
-# Useful for legacy systems that only support email notifications.
+# Uncomment and customize if you need email-based alerting.
 #
-# The integration creates a unique email address like:
-# <service-key>@<subdomain>.pagerduty.com
-
-resource "pagerduty_service_integration" "email" {
-  for_each = var.services
-
-  name    = "Email Integration"
-  type    = "generic_email_inbound_integration"
-  service = pagerduty_service.services[each.key].id
-
-  # Email parsing mode (optional)
-  # integration_email = "custom-alias@your-subdomain.pagerduty.com"
-}
+# NOTE: generic_email_inbound_integration requires setting integration_email
+# which must be unique per integration. Configure manually in PagerDuty UI
+# or use a computed value per service.
+#
+# resource "pagerduty_service_integration" "email" {
+#   for_each = var.services
+#
+#   name              = "Email Integration"
+#   type              = "generic_email_inbound_integration"
+#   service           = pagerduty_service.services[each.key].id
+#   integration_email = "${each.key}@your-subdomain.pagerduty.com"
+# }
 
 # =============================================================================
 # Additional Service Examples with Specific Configurations
 # =============================================================================
 
-# High-criticality service with support hours urgency
+# High-criticality service with constant high urgency
 resource "pagerduty_service" "database_primary" {
   name              = "${var.environment} - Primary Database"
   description       = "Primary PostgreSQL database cluster"
@@ -102,28 +101,10 @@ resource "pagerduty_service" "database_primary" {
   auto_resolve_timeout    = null # Never auto-resolve database alerts
   acknowledgement_timeout = 600  # 10 minutes
 
-  # Use support hours to determine urgency
+  # Constant high urgency for critical database service
   incident_urgency_rule {
-    type = "use_support_hours"
-
-    during_support_hours {
-      type    = "constant"
-      urgency = "high"
-    }
-
-    outside_support_hours {
-      type    = "constant"
-      urgency = "high" # Still high for database - it's critical
-    }
-  }
-
-  # Define support hours
-  support_hours {
-    type         = "fixed_time_per_day"
-    time_zone    = var.default_timezone
-    start_time   = "09:00:00"
-    end_time     = "18:00:00"
-    days_of_week = [1, 2, 3, 4, 5] # Monday through Friday
+    type    = "constant"
+    urgency = "high"
   }
 }
 

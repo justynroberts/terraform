@@ -284,7 +284,7 @@ resource "pagerduty_service_event_rule" "api_suppress_4xx" {
     subconditions {
       operator = "contains"
       parameter {
-        path  = "details.status_code"
+        path  = "event.custom_details.status_code"
         value = "4"
       }
     }
@@ -293,7 +293,7 @@ resource "pagerduty_service_event_rule" "api_suppress_4xx" {
     subconditions {
       operator = "equals"
       parameter {
-        path  = "details.suppress_4xx"
+        path  = "event.custom_details.suppress_4xx"
         value = "true"
       }
     }

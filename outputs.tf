@@ -99,13 +99,14 @@ output "service_integration_keys" {
   sensitive   = true
 }
 
-output "service_email_addresses" {
-  description = "Email integration addresses for each service"
-  value = {
-    for key, integration in pagerduty_service_integration.email :
-    key => integration.integration_email
-  }
-}
+# Email integration output - uncomment if using email integrations
+# output "service_email_addresses" {
+#   description = "Email integration addresses for each service"
+#   value = {
+#     for key, integration in pagerduty_service_integration.email :
+#     key => integration.integration_email
+#   }
+# }
 
 # =============================================================================
 # Event Orchestration Outputs

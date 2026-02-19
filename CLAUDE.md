@@ -50,7 +50,6 @@ terraform output service_integration_keys  # Get integration keys
 | `tags.tf` | Tags and tag assignments for organization |
 | `maintenance_windows.tf` | Scheduled maintenance windows |
 | `extensions.tf` | Webhook extensions for external systems |
-| `response_plays.tf` | One-click incident response actions (legacy) |
 | `slack_connections.tf` | Native Slack V2 integration |
 | `webhook_subscriptions.tf` | V3 webhook subscriptions |
 | `addons.tf` | UI add-ons (dashboards, runbooks) |
