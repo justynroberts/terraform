@@ -16,6 +16,77 @@ Production-ready Terraform configuration for PagerDuty infrastructure. This repo
 | Incident Workflows | 5 | Critical response, customer comms, management escalation |
 | Automation Actions | 6 | Health checks, log analysis, restart, cache clear, scale |
 
+## Managed Resources
+
+This configuration manages the following PagerDuty resources:
+
+### Core Resources
+| Resource | Terraform Type | Description |
+|----------|---------------|-------------|
+| **Users** | `pagerduty_user` | User accounts with roles (admin, user, observer) |
+| **Teams** | `pagerduty_team` | Organizational groupings for users and services |
+| **Team Memberships** | `pagerduty_team_membership` | User-to-team associations with roles (manager, responder, observer) |
+| **Schedules** | `pagerduty_schedule` | On-call rotations with layers and restrictions |
+| **Escalation Policies** | `pagerduty_escalation_policy` | Multi-level escalation chains |
+| **Services** | `pagerduty_service` | Technical services that receive alerts |
+| **Service Integrations** | `pagerduty_service_integration` | Events API, vendor integrations (Datadog, Prometheus, etc.) |
+
+### Business Context
+| Resource | Terraform Type | Description |
+|----------|---------------|-------------|
+| **Business Services** | `pagerduty_business_service` | Business-level services for impact analysis |
+| **Service Dependencies** | `pagerduty_service_dependency` | Relationship mapping between services |
+| **Tags** | `pagerduty_tag` | Labels for organizing resources |
+| **Tag Assignments** | `pagerduty_tag_assignment` | Apply tags to teams, users, or services |
+| **Priorities** | `pagerduty_priority` (data) | P1-P5 incident priority levels |
+
+### Event Processing
+| Resource | Terraform Type | Description |
+|----------|---------------|-------------|
+| **Event Orchestration** | `pagerduty_event_orchestration` | Global event routing engine |
+| **Orchestration Router** | `pagerduty_event_orchestration_router` | Route events to services based on content |
+| **Service Orchestration** | `pagerduty_event_orchestration_service` | Per-service event transformation and suppression |
+| **Unrouted Orchestration** | `pagerduty_event_orchestration_unrouted` | Handle events that don't match routing rules |
+| **Alert Grouping** | `pagerduty_alert_grouping_setting` | Intelligent, time-based, or content-based grouping |
+
+### Incident Response
+| Resource | Terraform Type | Description |
+|----------|---------------|-------------|
+| **Incident Workflows** | `pagerduty_incident_workflow` | Automated response sequences |
+| **Workflow Triggers** | `pagerduty_incident_workflow_trigger` | Conditions that start workflows |
+| **Custom Fields** | `pagerduty_incident_custom_field` | Additional incident metadata fields |
+| **Field Options** | `pagerduty_incident_custom_field_option` | Predefined values for custom fields |
+
+### Automation
+| Resource | Terraform Type | Description |
+|----------|---------------|-------------|
+| **Automation Runner** | `pagerduty_automation_actions_runner` | Connection to Runbook Automation |
+| **Automation Actions** | `pagerduty_automation_actions_action` | Diagnostic and remediation scripts |
+
+### Integrations & Extensions
+| Resource | Terraform Type | Description |
+|----------|---------------|-------------|
+| **Extensions** | `pagerduty_extension` | Webhook integrations for external systems |
+| **Slack Connections** | `pagerduty_slack_connection` | Native Slack V2 integration |
+| **Webhook Subscriptions** | `pagerduty_webhook_subscription` | V3 outbound webhooks |
+| **Add-ons** | `pagerduty_addon` | UI extensions (dashboards, runbooks) |
+
+### Operations
+| Resource | Terraform Type | Description |
+|----------|---------------|-------------|
+| **Maintenance Windows** | `pagerduty_maintenance_window` | Scheduled maintenance periods |
+| **Rulesets** | `pagerduty_ruleset` | Legacy event rules (use Event Orchestration instead) |
+| **Ruleset Rules** | `pagerduty_ruleset_rule` | Individual rules within rulesets |
+| **Service Event Rules** | `pagerduty_service_event_rule` | Per-service event processing rules |
+
+### Vendor Integrations (Data Sources)
+| Vendor | Description |
+|--------|-------------|
+| Datadog | APM and infrastructure monitoring |
+| Prometheus | Metrics and alerting |
+| CloudWatch | AWS monitoring |
+| Splunk | Log analysis |
+
 ## Prerequisites
 
 - [Terraform](https://www.terraform.io/downloads) >= 1.0
