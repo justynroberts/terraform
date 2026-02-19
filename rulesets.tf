@@ -270,48 +270,33 @@ resource "pagerduty_ruleset_rule" "catch_all" {
 }
 
 # =============================================================================
-# Service Event Rules (Per-Service Rules)
+# Service Event Rules (Per-Service Rules) - COMMENTED
 # =============================================================================
-# These rules apply only to events that reach a specific service
-
-resource "pagerduty_service_event_rule" "api_suppress_4xx" {
-  service = pagerduty_service.services["api_gateway"].id
-  position = 0
-
-  conditions {
-    operator = "and"
-
-    subconditions {
-      operator = "contains"
-      parameter {
-        path  = "event.custom_details.status_code"
-        value = "4"
-      }
-    }
-
-    # Suppress during business hours only (less critical)
-    subconditions {
-      operator = "equals"
-      parameter {
-        path  = "event.custom_details.suppress_4xx"
-        value = "true"
-      }
-    }
-  }
-
-  actions {
-    suppress {
-      value = true
-    }
-  }
-
-  time_frame {
-    active_between {
-      start_time = 1577880000000 # Milliseconds since epoch
-      end_time   = 1577966400000
-    }
-  }
-}
+# Service event rules use payload.* paths (not event.*)
+# Uncomment and customize as needed
+#
+# resource "pagerduty_service_event_rule" "api_suppress_4xx" {
+#   service  = pagerduty_service.services["api_gateway"].id
+#   position = 0
+#
+#   conditions {
+#     operator = "and"
+#
+#     subconditions {
+#       operator = "contains"
+#       parameter {
+#         path  = "payload.custom_details.status_code"
+#         value = "4"
+#       }
+#     }
+#   }
+#
+#   actions {
+#     suppress {
+#       value = true
+#     }
+#   }
+# }
 
 # =============================================================================
 # Locals for Ruleset References
